@@ -1,14 +1,22 @@
 import React, { Component } from 'react';
 import './App.css';
+import 'semantic-ui-css/semantic.min.css';
+import { Step } from 'semantic-ui-react'
+import HeaderGroup from './components/HeaderGroup';
 import Invitationforbid from './components/Invitationforbid';
-import 'bootstrap/dist/css/bootstrap.min.css'
-import 'bootstrap/dist/js/bootstrap.min.js'
 
-class App extends Component {
+
+class App extends Component {  
   render() {
+    var myArray = [
+      { Title: 'Invitation for Bid', status:'true' , Description: 'Create Invitation for Bid', Icon:'' },
+      { Title: 'Review Vendors', status:'' , Description: 'Send Invitation for Bid for Vendors', Icon:'' },
+      { Title: 'Confirmation', status:'' , Description: '', Icon:'info' }
+  ];
     return (
-      <div className="App"> 
-          <Invitationforbid />
+      <div className="App">
+        <HeaderGroup headers={myArray}/>
+        <Invitationforbid />
       </div>
     );
   }

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react';
 import { Dropdown } from 'semantic-ui-react'
 
 const friendOptions = [
@@ -14,8 +14,13 @@ const friendOptions = [
 },
 ]
 
-const DropdownExampleSelection = () => (
-  <Dropdown placeholder='Select Client' fluid selection options={friendOptions} />
-)
+var axios = require('axios');
+class DropdownExampleSelection extends Component {
+    render(){
+            return (
+        <Dropdown placeholder='Select Client' fluid selection options={friendOptions} />
+        );
+    }
+}
 
 export default DropdownExampleSelection
