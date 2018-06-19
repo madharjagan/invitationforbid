@@ -1,12 +1,14 @@
-import React, { Component } from 'react';
-import { Header } from 'semantic-ui-react'
+import React from 'react';
 import DropdownExampleSelection from './Selection';
 import DatePicker from './OpwDatePicker';
 import { Form, TextArea } from 'semantic-ui-react'
-import Dropzone from 'react-dropzone'
+//import Dropzone from 'react-dropzone'
 import DropdownExampleMultipleSelection from './DropDown';
 import DropzoneComponent from 'react-dropzone-component';
 import './style.css';
+import { states } from './States';
+
+
 var djsConfig = {autoProcessQueue: false ,addRemoveLinks: true}
 var eventHandlers = { addedfile: (file) => console.log(file) ,thumbnail: null}
 
@@ -15,14 +17,13 @@ var componentConfig = { postUrl: 'no-url' ,processQueue:'false'};
 /*
 * Invitation for bid class
 */
-export default class Invitationforbid extends Component {
-  render() {
+const Invitationforbid = (props) => {
     return (
         <div className="container">
         <h1 className="well">{this.screentitle}</h1>
         <div className="col-lg-12 well">
           <div className="row">
-            <Form id="addpropertyform">
+            <Form id="inviationforbidform">
               <div className="row">		
                   <div className=" col-sm-6 form-group">
                     <label>Select Client</label>
@@ -54,18 +55,20 @@ export default class Invitationforbid extends Component {
                  <div className="col-sm-2 form-group">
                       <label>Attachments*</label>
                       <DropzoneComponent
-                     
                        config={componentConfig}
                        eventHandlers={eventHandlers}
                        djsConfig={djsConfig}/>
                   </div>									
               </div>
               <br/>
-               <button type="button"  className="col-sm-2 btn btn-lg btn-info">Create Bid</button>	
+               <button type="button"  className="col-sm-2 btn btn-lg btn-info"
+               primary onClick={() => props.next(states.REVIEW_VENDORS)} >Proceed</button>	
             </Form> 
           </div>
         </div>
       </div>
     );
-  }
-}
+  };
+
+
+export default Invitationforbid

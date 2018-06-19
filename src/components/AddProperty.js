@@ -1,6 +1,8 @@
 /*global google*/
 import React, { Component } from 'react';
 import NotificationAlert from 'react-notification-alert';
+import {Button, Grid} from 'semantic-ui-react';
+
 
 class AddProperty extends Component {
 
@@ -25,7 +27,7 @@ class AddProperty extends Component {
 
   constructor(props) {
     super(props);
-
+   
    // if(!this.props.match.params.propertyID)
       this.screentitle = "Add Property";
    // else
@@ -55,7 +57,7 @@ class AddProperty extends Component {
   }
 
   componentDidMount() {
-    this.initAutocomplete();
+  //  this.initAutocomplete();
    /* console.log("AddProperty componentDidMount called ..." + this.props.match.params.propertyID);
     if(this.props.match.params.propertyID){
     fetch('http://ec2-34-229-126-140.compute-1.amazonaws.com:8081/getPropertyDetails/'+this.props.match.params.propertyID)
@@ -264,6 +266,11 @@ class AddProperty extends Component {
                   </div>							
                   <button type="button"  onClick= {this.addProperty} className="btn btn-lg btn-info">{this.screentitle}</button>					
                   <button type="button"  onClick= {this.clearFormFields} className="btn btn-lg btn-info">Clear</button>					
+                  <Grid>
+                     <Grid.Column floated='left' width={5}>
+                      <Button secondary onClick={this._back}>Back</Button>
+                       </Grid.Column>
+                   </Grid>
                 </div>
               </form> 
             </div>
