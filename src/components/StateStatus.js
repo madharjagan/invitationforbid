@@ -11,7 +11,8 @@ export class StateStatus {
   constructor() {
     this.transitions = {
       [states.INVIATATION_FOR_BID] : [states.REVIEW_VENDORS],
-      [states.CONFIRM] : [states.VEHICLE_CHOOSE, states.FINISH] // FYI the FINISH state is not used
+      [states.REVIEW_VENDORS] : [states.INVIATATION_FOR_BID, states.CONFIRM],
+      [states.CONFIRM] : [states.FINISH] // FYI the FINISH state is not used
     };
   }
 

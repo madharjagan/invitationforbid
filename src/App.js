@@ -13,63 +13,71 @@ import 'bootstrap/dist/js/bootstrap.min.js';
 
 class App extends Component { 
   constructor(props) {
-    console.log('constructor of app called');
     super(props);
     this.state = {
       currentState: states.INVIATATION_FOR_BID,
-      status :'true'
+      status :'true',
+      myArray : [
+        { Title: 'Invitation for Bid', status:'active' , Description: 'Create Invitation for Bid', Icon:'' },
+        { Title: 'Review Vendors', status:'' , Description: 'Send Invitation for Bid for Vendors', Icon:'' },
+        { Title: 'Confirmation', status:'' , Description: '', Icon:'info' }
+       ]
     };
-    console.log('app values - currentState -- '+this.state.currentState);
-    console.log('app values - status -- '+this.state.status);
     this._next = this._next.bind(this);
     this._back = this._back.bind(this);
+    this.getWorkFlowStatus = this.getWorkFlowStatus.bind(this);
     this.statestatus = new StateStatus();
   }
 
    _next(desiredState) {
-     console.log('next method of app');
-    let currentState = this.state.currentState;
-    console.log('currentState' +currentState);
-    console.log('desiredState' +desiredState);
-   
+    let currentState = this.state.currentState; 
     let nextState = this.statestatus.transitionTo(currentState, desiredState);
+    this.state.currentState = nextState;
     this.setState({
-      currentState: nextState
-    });
-    this.setState({
+      currentState: nextState,
       status: false
     });
-    console.log('currentState' +this.state.currentState);
-     console.log('status' +this.state.status);
+     this.state.myArray = this.getWorkFlowStatus();
   }
 
   _back(desiredState) {
     let currentState = this.state.currentState;
-    this.setState({
-      currentState: this.statestatus.transitionFrom(currentState, desiredState)
-    });
+    let nextState = this.statestatus.transitionFrom(currentState, desiredState);
+    this.state.currentState = nextState;
+    this.state.myArray = this.getWorkFlowStatus();
   }
+
+  getWorkFlowStatus(){
+    switch(this.state.currentState) {
+      case states.INVIATATION_FOR_BID:
+      return [
+          { Title: 'Invitation for Bid', status:'active' , Description: 'Create Invitation for Bid', Icon:'' },
+          { Title: 'Review Vendors', status:'' , Description: 'Send Invitation for Bid for Vendors', Icon:'' },
+          { Title: 'Confirmation', status:'' , Description: '', Icon:'info' }
+        ];
+      case states.REVIEW_VENDORS:
+      return [
+          { Title: 'Invitation for Bid', status:'' , Description: 'Create Invitation for Bid', Icon:'' },
+          { Title: 'Review Vendors', status:'active' , Description: 'Send Invitation for Bid for Vendors', Icon:'' },
+          { Title: 'Confirmation', status:'' , Description: '', Icon:'info' }
+        ];
+    }
+
+  }
+
   _currentStep() {
     switch(this.state.currentState) {
       case states.INVIATATION_FOR_BID:
-        return(<Invitationforbid next={this._next}/>);
+        return(<div><HeaderGroup headers={this.state.myArray}/><Invitationforbid next={this._next}/></div>);
       case states.REVIEW_VENDORS:
-        return(<AddProperty 
+        return(<div><HeaderGroup headers={this.state.myArray}/><AddProperty 
           back={this._back}
-          next={this._next}/>);
-      default:
-        return(<Invitationforbid next={this._next}/>);
+          next={this._next}/></div>);
     }
   } 
   render() {
-    var myArray = [
-      { Title: 'Invitation for Bid', status:this.state.status , Description: 'Create Invitation for Bid', Icon:'' },
-      { Title: 'Review Vendors', status:this.state.status , Description: 'Send Invitation for Bid for Vendors', Icon:'' },
-      { Title: 'Confirmation', status:'' , Description: '', Icon:'info' }
-  ];
     return (
       <div className="App">
-        <HeaderGroup headers={myArray}/>
         {this._currentStep()}
       </div>
     );
