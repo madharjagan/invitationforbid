@@ -7,9 +7,11 @@ import Invitationforbid from './components/Invitationforbid';
 import AddProperty from './components/AddProperty';
 import { states } from './components/States.js';
 import { StateStatus } from './components/StateStatus.js';
+import ReviewVendors from './components/ReviewVendors';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
+
 
 class App extends Component { 
   constructor(props) {
@@ -38,6 +40,7 @@ class App extends Component {
       status: false
     });
      this.state.myArray = this.getWorkFlowStatus();
+     this.state.verndortypes = '{\r\n\t\"vendortypes\": [{\r\n\t\t\t\"typeid\": 1,\r\n\t\t\t\"Name\": \"ABC Type\",\r\n\t\t\t\"Vendors\": [{\r\n\t\t\t\t\t\"vendorID\":1,\r\n\t\t\t\t\t\"Name\": \"ABC Company\",\r\n\t\t\t\t\t\"email\": \"abc@gmail.com\"\r\n\t\t\t\t},\r\n\t\t\t\t{\r\n\t\t\t\t\t\"vendorID\":2,\r\n\t\t\t\t\t\"Name\": \"def Company\",\r\n\t\t\t\t\t\"email\": \"def@gmail.com\"\r\n\t\t\t\t},\r\n\t\t\t\t{\r\n\t\t\t\t\t\"vendorID\":3,\r\n\t\t\t\t\t\"Name\": \"qwe Company\",\r\n\t\t\t\t\t\"email\": \"qwe@gmail.com\"\r\n\t\t\t\t}\r\n\t\t\t]\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"typeid\": 2,\r\n\t\t\t\"Name\": \"123 Type\",\r\n\t\t\t\"Vendors\": [{\r\n\t\t\t\t\t\"vendorID\":4,\r\n\t\t\t\t\t\"Name\": \"123 Company\",\r\n\t\t\t\t\t\"email\": \"123@gmail.com\"\r\n\t\t\t\t},\r\n\t\t\t\t{\r\n\t\t\t\t\t\"vendorID\":5,\r\n\t\t\t\t\t\"Name\": \"456 Company\",\r\n\t\t\t\t\t\"email\": \"456@gmail.com\"\r\n\t\t\t\t},\r\n\t\t\t\t{\r\n\t\t\t\t\t\"vendorID\":6,\r\n\t\t\t\t\t\"Name\": \"789 Company\",\r\n\t\t\t\t\t\"email\": \"789@gmail.com\"\r\n\t\t\t\t}\r\n\t\t\t]\r\n\t\t}\r\n\t]\r\n}'
   }
 
   _back(desiredState) {
@@ -70,7 +73,7 @@ class App extends Component {
       case states.INVIATATION_FOR_BID:
         return(<div><HeaderGroup headers={this.state.myArray}/><Invitationforbid next={this._next}/></div>);
       case states.REVIEW_VENDORS:
-        return(<div><HeaderGroup headers={this.state.myArray}/><AddProperty 
+        return(<div><HeaderGroup headers={this.state.myArray}/><ReviewVendors vendortypes={JSON.parse(this.state.verndortypes)}
           back={this._back}
           next={this._next}/></div>);
     }
