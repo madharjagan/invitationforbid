@@ -2,12 +2,11 @@ import React, { Component } from 'react';
 import './App.css';
 import 'semantic-ui-css/semantic.min.css';
 import { Step } from 'semantic-ui-react'
-import HeaderGroup from './components/HeaderGroup';
-import Invitationforbid from './components/Invitationforbid';
-import AddProperty from './components/AddProperty';
-import { states } from './components/States.js';
-import { StateStatus } from './components/StateStatus.js';
-import ReviewVendors from './components/ReviewVendors';
+import HeaderGroup from './components/ifb/HeaderGroup';
+import Invitationforbid from './components/ifb/Invitationforbid';
+import { states } from './components/ifb/States.js';
+import { StateStatus } from './components/ifb/StateStatus.js';
+import ReviewVendors from './components/ifb/ReviewVendors';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
