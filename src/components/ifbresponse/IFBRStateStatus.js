@@ -1,4 +1,4 @@
-import { states } from './IFBRStates.js';
+import { IFBRStates } from './IFBRStates.js';
 
 /*
  * This class simply helps us coordinate the transitions
@@ -7,12 +7,12 @@ import { states } from './IFBRStates.js';
  * transition between states requested by the app
  * are valid.
  */
-export class StateStatus {
+export class IFBRStateStatus {
   constructor() {
     this.transitions = {
-      [states.INVIATATION_FOR_BID] : [states.SUBMIT_BID],
-      [states.SUBMIT_BID] : [states.INVIATATION_FOR_BID, states.CONFIRM],
-      [states.CONFIRM] : [states.FINISH] // FYI the FINISH state is not used
+      [IFBRStates.INVIATATION_FOR_BID] : [IFBRStates.SUBMIT_BID],
+      [IFBRStates.SUBMIT_BID] : [IFBRStates.INVIATATION_FOR_BID, IFBRStates.CONFIRM],
+      [IFBRStates.CONFIRM] : [IFBRStates.FINISH] // FYI the FINISH state is not used
     };
   }
 

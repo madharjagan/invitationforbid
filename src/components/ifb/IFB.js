@@ -77,7 +77,7 @@ class IFB extends Component {
   } 
   render() {
     return (
-      <div className="App">
+      <div>
         {this._currentStep()}
       </div>
     );
