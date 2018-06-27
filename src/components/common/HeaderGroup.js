@@ -7,9 +7,7 @@ class HeaderGroup extends Component {
     render(){
         return (
         <Step.Group>
-            <HeaderStep header={this.props.headers[0]}/>
-            <HeaderStep header={this.props.headers[1]}/>
-            <HeaderStep header={this.props.headers[2]}/>
+            {this.props.headers.map(head => <HeaderStep key={head.Title} header={head} />)}
         </Step.Group>
         );
     }
