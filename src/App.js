@@ -7,6 +7,7 @@ import Invitationforbid from './components/ifb/Invitationforbid';
 import { states } from './components/ifb/States.js';
 import { StateStatus } from './components/ifb/StateStatus.js';
 import ReviewVendors from './components/ifb/ReviewVendors';
+import IFBStatus from './components/ifbstatus/IFBStatus';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
@@ -81,6 +82,9 @@ class App extends Component {
     return (
       <div className="App">
         {this._currentStep()}
+        <br />
+        <br />
+        <IFBStatus />
       </div>
     );
   }

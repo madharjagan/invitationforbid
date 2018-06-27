@@ -1,4 +1,3 @@
-/*global google*/
 import React, { Component } from 'react';
 import { CustomInput } from 'reactstrap';
 
