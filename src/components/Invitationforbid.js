@@ -1,5 +1,5 @@
-import React from 'react';
-import DropdownExampleSelection from './Selection';
+import React, { Component } from 'react';
+import DropdownExampleSelection from './DropdownExampleSelection';
 import DatePicker from './OpwDatePicker';
 import { Form, TextArea } from 'semantic-ui-react'
 //import Dropzone from 'react-dropzone'
@@ -7,6 +7,7 @@ import DropdownExampleMultipleSelection from './DropDown';
 import DropzoneComponent from 'react-dropzone-component';
 import './style.css';
 import { states } from './States';
+
 
 
 var djsConfig = {autoProcessQueue: false ,addRemoveLinks: true}
@@ -17,17 +18,37 @@ var componentConfig = { postUrl: 'no-url' ,processQueue:'false'};
 /*
 * Invitation for bid class
 */
-const Invitationforbid = (props) => {
+
+var axios = require('axios');
+
+class Invitationforbid extends Component {
+ 
+  constructor(props) {
+    super(props);
+    this.state = {
+      clientNames : []
+    };
+      axios.get(`http://localhost:8080/getClientNames`)
+        .then(resp => {   
+          this.setState(prevState => ({
+            clientNames: resp.data 
+        }))
+      }); 
+  }
+
+ render()
+  {
     return (
         <div className="container">
         <h1 className="well">{this.screentitle}</h1>
         <div className="col-lg-12 well">
           <div className="row">
-            <Form id="inviationforbidform">
+            <Form id="inviationforbidform" onSubmit={this.handleFormSubmit}>
               <div className="row">		
                   <div className=" col-sm-6 form-group">
                     <label>Select Client</label>
-                    <DropdownExampleSelection />
+                    <DropdownExampleSelection  clientNames={this.state.clientNames} />
+                   
                   </div>	
                 <div className="row">
                     <div className="col-sm-6 form-group">
@@ -47,7 +68,7 @@ const Invitationforbid = (props) => {
                   <div className="row">
                       <div className=" col-sm-8 form-group">
                         <label text-align="left">Select Vendors</label>
-                        <DropdownExampleMultipleSelection />
+                           <DropdownExampleMultipleSelection/>
                       </div>  
                   </div>
                 </div>
@@ -62,7 +83,10 @@ const Invitationforbid = (props) => {
               </div>
               <br/>
                <button type="button"  className="col-sm-2 btn btn-lg btn-info"
-               primary onClick={() => props.next(states.REVIEW_VENDORS)} >Proceed</button>	
+              // primary onClick={this.nextAction} >Proceed</button>	
+              onClick={(nextAction) => this.props.next(states.REVIEW_VENDORS)} >Proceed</button>
+
+              
             </Form> 
           </div>
         </div>
@@ -70,5 +94,6 @@ const Invitationforbid = (props) => {
     );
   };
 
+}
 
-export default Invitationforbid
+export default Invitationforbid;
