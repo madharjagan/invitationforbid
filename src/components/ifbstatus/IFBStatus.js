@@ -32,7 +32,7 @@ class IFBStatus extends Component {
                 </td>
                 <td>
                   <button type="button" className="btn btn-default btn-sm" >
-                    <span className="glyphicon glyphicon-trash"></span> Comments 
+                  <a href="#">Comments <span class="badge">4</span></a>
                   </button>
                 </td>
               </tr>

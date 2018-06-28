@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import 'semantic-ui-css/semantic.min.css';
 import HeaderGroup from '../common/HeaderGroup';
-import Invitationforbid from '../ifb/Invitationforbid';
+import IFBInfo from './IFBInfo';
 import { IFBRStates } from './IFBRStates';
 import { IFBRStateStatus } from './IFBRStateStatus';
 import ReviewVendors from '../ifb/ReviewVendors';
@@ -70,7 +70,7 @@ class IFBResponse extends Component {
       _currentStep() {
         switch(this.state.currentState) {
           case IFBRStates.INVIATATION_FOR_BID:
-            return(<div><HeaderGroup headers={this.state.myArray}/><Invitationforbid next={this._next}/></div>);
+            return(<div><HeaderGroup headers={this.state.myArray}/><IFBInfo next={this._next}/></div>);
           case IFBRStates.SUBMIT_BID:
             return(<div><HeaderGroup headers={this.state.myArray}/><ReviewVendors vendortypes={JSON.parse(this.state.verndortypes)}
               back={this._back}
