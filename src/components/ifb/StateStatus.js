@@ -10,7 +10,8 @@ import { states } from './States.js';
 export class StateStatus {
   constructor() {
     this.transitions = {
-      [states.INVIATATION_FOR_BID] : [states.REVIEW_VENDORS],
+      [states.INVIATATION_FOR_BID] : [states.REVIEW_CLIENTS],
+      [states.REVIEW_CLIENTS] : [states.REVIEW_VENDORS],
       [states.REVIEW_VENDORS] : [states.INVIATATION_FOR_BID, states.CONFIRM],
       [states.CONFIRM] : [states.FINISH] // FYI the FINISH state is not used
     };
@@ -33,7 +34,6 @@ export class StateStatus {
   }
 
   _checkState(available, desired) {
-    console.log('_checkState calling --- ' + 'available --' + available + 'desired----' +desired);
     if (available.includes(desired)) {
       return desired;
     } else {
@@ -42,9 +42,7 @@ export class StateStatus {
   }
 
   transitionTo(current, desired) {
-    console.log('transitionto method calling');
     let available = this.transitions[current].concat();
-    console.log('available value' + available);
     return this._checkState(available, desired);
   }
 

@@ -16,7 +16,7 @@ class VendorType extends Component {
                 <CardBody>
                     <FormGroup>
                         <Label for="exampleCheckbox">{this.props.name}</Label>
-                        {this.props.vendors.map(verdor => <Vendor key={verdor.vendorID} {...verdor} />)}
+                        {this.props.vendors.map(verdor => <Vendor key={verdor.vendorId} {...verdor} />)}
                     </FormGroup>
                 </CardBody>
             </Card>

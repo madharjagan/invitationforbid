@@ -3,26 +3,23 @@ import React, { Component } from 'react';
 import NotificationAlert from 'react-notification-alert';
 import {Button, Grid} from 'semantic-ui-react';
 import VendorType from './VendorType';
-
+import { states } from './States';
 
 class ReviewVendors extends Component {
 
-
   render() {
+    console.log('this.props.vendortypes in ReviewVEndors'+JSON.stringify(this.props.vendortypes));
       return (
         <form id="addpropertyform">
           <div className="container">
             <h3 className="well">Vendor Types</h3>
             <div className="col-lg-12 well">
                 <div className="row">
-                    {this.props.vendortypes.vendortypes.map(vendortype => <VendorType key={vendortype.typeid} name = {vendortype.Name} vendors= {vendortype.Vendors} />)}
+                    {this.props.vendortypes.vendortypes.map(vendortype => <VendorType key={vendortype.vendortypeId} name = {vendortype.vendorType} vendors= {vendortype.vendor} />)}
                 </div>
-                <Grid>
-                    <Grid.Column floated='left' width={5}>
-                    <Button secondary onClick={this._back}>Back</Button>
-                    </Grid.Column>
-                </Grid>
-            </div>
+                    <button type="button"  className="col-sm-2 btn btn-lg btn-info"
+                     onClick={(nextAction) => this.props.next(states.CONFIRM)} >Proceed</button>
+                </div>
           </div>
         </form>
       );

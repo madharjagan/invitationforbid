@@ -3,11 +3,10 @@ import DropdownExampleSelection from './DropdownExampleSelection';
 import DatePicker from './OpwDatePicker';
 import { Form, TextArea } from 'semantic-ui-react'
 //import Dropzone from 'react-dropzone'
-import DropdownExampleMultipleSelection from './DropDown';
 import DropzoneComponent from 'react-dropzone-component';
 import './style.css';
 import { states } from './States';
-
+import { Dropdown } from 'semantic-ui-react'
 
 
 var djsConfig = {autoProcessQueue: false ,addRemoveLinks: true}
@@ -21,20 +20,47 @@ var componentConfig = { postUrl: 'no-url' ,processQueue:'false'};
 
 var axios = require('axios');
 
+var vendorTypes =[];
 class Invitationforbid extends Component {
  
   constructor(props) {
     super(props);
     this.state = {
-      clientNames : []
+      clientNames : [],
+      selectedVendor:[]
     };
+    this.handleChange = this.handleChange.bind(this);
+    this.fetchVendorType = this.fetchVendorType.bind(this);
+
       axios.get(`http://localhost:8080/getClientNames`)
         .then(resp => {   
           this.setState(prevState => ({
             clientNames: resp.data 
         }))
       }); 
+      
+       axios.get(`http://localhost:8080/getVendorTypes`)
+        .then(resp => {   
+          vendorTypes = resp.data;
+          this.setState(prevState => ({
+            vendorTypes: resp.data
+        }))
+      }); 
+    
   }
+
+  fetchVendorType() {
+    this.props.fetchVendorType(this.state.selectedVendor);
+    this.props.next(states.REVIEW_CLIENTS);
+  }
+
+  handleChange = (e, {value}) => {
+  e.persist();
+  this.setState({
+      selectedVendor: [...this.state.selectedVendor, e.target.textContent] 
+    });
+  };
+
 
  render()
   {
@@ -43,7 +69,7 @@ class Invitationforbid extends Component {
         <h1 className="well">{this.screentitle}</h1>
         <div className="col-lg-12 well">
           <div className="row">
-            <Form id="inviationforbidform" onSubmit={this.handleFormSubmit}>
+            <Form id="inviationforbidform" onSubmit={this.fetchVendorType}>
               <div className="row">		
                   <div className=" col-sm-6 form-group">
                     <label>Select Client</label>
@@ -68,7 +94,12 @@ class Invitationforbid extends Component {
                   <div className="row">
                       <div className=" col-sm-8 form-group">
                         <label text-align="left">Select Vendors</label>
-                           <DropdownExampleMultipleSelection/>
+                            <Dropdown
+                                placeholder="Select Vendors"
+                                fluid multiple selection
+                                options={vendorTypes}
+                                onChange={(e) => this.handleChange(e,vendorTypes)}
+                              />   
                       </div>  
                   </div>
                 </div>
@@ -82,12 +113,8 @@ class Invitationforbid extends Component {
                   </div>									
               </div>
               <br/>
-               <button type="button"  className="col-sm-2 btn btn-lg btn-info"
-              // primary onClick={this.nextAction} >Proceed</button>	
-              onClick={(nextAction) => this.props.next(states.REVIEW_VENDORS)} >Proceed</button>
-
-              
-            </Form> 
+               <button type="submit"  className="col-sm-2 btn btn-lg btn-info">Proceed</button>
+           </Form> 
           </div>
         </div>
       </div>

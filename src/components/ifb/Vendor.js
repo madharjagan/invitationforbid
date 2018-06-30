@@ -8,7 +8,7 @@ class Vendor extends Component {
   render() {
       return (
           <div>
-            <CustomInput type="checkbox" id={this.props.vendorID} label={this.props.Name} />
+            <CustomInput type="checkbox" id={this.props.vendorId} label={this.props.vendorName} />
           </div>
       );
   }

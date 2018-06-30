@@ -12,7 +12,7 @@ class DropdownExampleSelection extends Component {
             );
        return (
          <div>
-             <select placeholder='Vendors'>
+             <select>
                  <option class="option">Select</option>
                     {clientNames}
              </select>
