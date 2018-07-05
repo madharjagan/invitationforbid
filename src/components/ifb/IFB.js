@@ -6,6 +6,7 @@ import { states } from './States.js';
 import { StateStatus } from './StateStatus.js';
 import ReviewVendors from './ReviewVendors';
 import ReviewClients from './ReviewClients';
+import Confirm from './Confirm';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
@@ -24,7 +25,8 @@ class IFB extends Component {
         { Title: 'Confirmation', status:'' , Description: '', Icon:'info' }
        ],
        selectedVendor:[],
-       vendorDetails:''
+       vendorDetails:'',
+       selectedClient:''
     };
     this._next = this._next.bind(this);
     this._back = this._back.bind(this);
@@ -76,6 +78,13 @@ class IFB extends Component {
           { Title: 'Review Vendors', status:'active' , Description: 'Send Invitation for Bid for Vendors', Icon:'' },
           { Title: 'Confirmation', status:'' , Description: '', Icon:'info' }
         ];
+      case states.CONFIRM:
+      return [
+          { Title: 'Invitation for Bid', status:'' , Description: 'Create Invitation for Bid', Icon:'' },
+          { Title: 'Review Clients', status:'' , Description: 'Details for Client', Icon:'' },
+          { Title: 'Review Vendors', status:'' , Description: 'Send Invitation for Bid for Vendors', Icon:'' },
+          { Title: 'Confirmation', status:'active' , Description: '', Icon:'info' }
+        ];
     }
 
   }
@@ -85,16 +94,21 @@ class IFB extends Component {
       case states.INVIATATION_FOR_BID:
         return(<div><HeaderGroup headers={this.state.myArray}/><Invitationforbid next={this._next} fetchVendorType={this.fetchVendorType} /></div>);
       case states.REVIEW_CLIENTS:
-        return(<div><HeaderGroup headers={this.state.myArray}/><ReviewClients next={this._next} back={this._back} fetchVendorDetails={this.fetchVendorDetails} selectedVendor={this.state.selectedVendor}/></div>);
+        return(<div><HeaderGroup headers={this.state.myArray}/><ReviewClients next={this._next} back={this._back} fetchVendorDetails={this.fetchVendorDetails} selectedVendor={this.state.selectedVendor} selectedClient={this.state.selectedClient}/></div>);
       case states.REVIEW_VENDORS:
         return(<div><HeaderGroup headers={this.state.myArray}/><ReviewVendors vendortypes={JSON.parse(this.state.vendorDetails)}
-          back={this._back}
+          selectedClient={this.state.selectedClient} back={this._back}
           next={this._next}/></div>);
+      case states.CONFIRM:
+        return(<div><HeaderGroup headers={this.state.myArray}/><Confirm selectedClient={this.state.selectedClient}
+          back={this._back}/></div>);
     }
   } 
    
-   fetchVendorType (vendorType){    
+   fetchVendorType (vendorType,client){   
+     console.log('fetchVendorType in IFB vendorType'+ vendorType+ 'client'+ client) 
     this.setState({ selectedVendor: [...this.state.selectedVendor, vendorType]  }); 
+    this.setState({ selectedClient: client  }); 
   }
 
    fetchVendorDetails (vendorDetailsFrmDb){    

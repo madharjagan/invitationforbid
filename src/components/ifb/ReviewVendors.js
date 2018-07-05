@@ -8,7 +8,6 @@ import { states } from './States';
 class ReviewVendors extends Component {
 
   render() {
-    console.log('this.props.vendortypes in ReviewVEndors'+JSON.stringify(this.props.vendortypes));
       return (
         <form id="addpropertyform">
           <div className="container">
