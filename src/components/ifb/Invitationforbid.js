@@ -27,24 +27,28 @@ class Invitationforbid extends Component {
     this.state = {
       clientNames : [],
       selectedVendor:[],
-      selectedClient:''
+      selectedClient:'',
+      bidDueDate:'',
+      workDueDate:'',
+      description:'',
+      siteDetails:''
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleChangeClient = this.handleChangeClient.bind(this);
-    this.fetchVendorType = this.fetchVendorType.bind(this);
-   
+    this.fetchBidDetails = this.fetchBidDetails.bind(this);
+    this.fetchDate = this.fetchDate.bind(this);
 
-    axios.get(`http://localhost:8080/getClientNames`)
+    axios.get(`http://localhost:8082/getClientNames`)
         .then(resp => {   
           this.setState(prevState => ({
             clientNames: resp.data 
         }))
       }); 
       
-       axios.get(`http://localhost:8080/getVendorTypes`)
+       axios.get(`http://localhost:8082/getVendorTypes`)
         .then(resp => {   
           vendorTypes = resp.data;
-          console.log('vendorTypes' + vendorTypes)
+         // console.log('vendorTypes' + vendorTypes)
           this.setState(prevState => ({
             vendorTypes: resp.data
         }))
@@ -52,10 +56,16 @@ class Invitationforbid extends Component {
     
   }
 
-  fetchVendorType() {
-    console.log('fetchVendorType in inviation '+this.state.selectedVendor + 'client' + this.state.selectedClient);
-    this.props.fetchVendorType(this.state.selectedVendor,this.state.selectedClient);
-    this.props.next(states.REVIEW_CLIENTS);
+  fetchBidDetails() {
+    //console.log('fetchBidDetails in inviation '+this.state.selectedVendor + 'client' + this.state.selectedClient);
+    
+    axios.get(`http://localhost:8082/getClientSites?clientName=${this.state.selectedClient}`)
+        .then(resp => {   
+          this.state.siteDetails = JSON.stringify(resp.data);
+          this.props.fetchBidDetails(this.state.selectedVendor,this.state.selectedClient,this.state.bidDueDate,this.state.workDueDate,this.state.description,this.state.siteDetails);
+          this.props.next(states.REVIEW_CLIENTS);
+      }); 
+    
   }
 
   handleChange = (e, {value}) => {
@@ -67,17 +77,32 @@ class Invitationforbid extends Component {
 
   
   handleChangeClient = (e) => {
-        console.log('handleChangeClient called' + e.target.value);
         e.persist();
         this.setState({
             selectedClient: e.target.value
             });
     }; 
 
+  fetchDate (date,id){   
+   
+     if( id === "bidDueDateId"){
+        this.setState({ bidDueDate: date  }); 
+     }
+     if( id === "workDueDateId"){
+        this.setState({ workDueDate: date  }); 
+     } 
+  }
+
+  fetchDescription = (e) => {
+  this.setState({
+      description: e.target.value
+    });
+  };
+
+
 
  render()
   {
-    console.log('selected clientn in invitation' + this.state.selectedClient)
      var clientNames = this.state.clientNames.map((client) =>
                 <option key={client}>{client}</option>
             );
@@ -86,7 +111,7 @@ class Invitationforbid extends Component {
         <h1 className="well">{this.screentitle}</h1>
         <div className="col-lg-12 well">
           <div className="row">
-            <Form id="inviationforbidform" onSubmit={this.fetchVendorType}>
+            <Form id="inviationforbidform" onSubmit={this.fetchBidDetails}>
               <div className="row">		
                   <div className=" col-sm-6 form-group">
                     <label>Select Client</label>
@@ -99,16 +124,17 @@ class Invitationforbid extends Component {
                 <div className="row">
                     <div className="col-sm-6 form-group">
                       <label>Bid Due Date* </label>
-                      <DatePicker />
+                      <DatePicker id="bidDueDateId"  fetchDate={this.fetchDate} />
                     </div>	
                     <div className="col-sm-6 form-group">
                       <label>Work Due Date</label>
-                      <DatePicker />
+                      <DatePicker id="workDueDateId"  fetchDate={this.fetchDate}/>
                     </div>	
                 </div>
                 <div className="col-sm-11 form-group">
                   <label>Description*</label>
-                  <TextArea />
+                  <TextArea autoHeight placeholder='Enter Description' value={this.props.description}
+                  onChange={(e) => this.fetchDescription(e)}/>
                 </div>
                 <div className="col-lg-12 well">	
                   <div className="row">

@@ -1,6 +1,8 @@
 import React, { Component} from 'react'
 import { states } from './States';
 import { Form } from 'semantic-ui-react'
+import ClientSiteDetails from './ClientSiteDetails';
+
 
 var axios = require('axios');
 
@@ -16,7 +18,7 @@ constructor(props){
 }
 
 fetchVendorDetails() {
-     axios.get(`http://localhost:8080/getVendorDetailsForType?vendorType=${this.props.selectedVendor}`)
+     axios.get(`http://localhost:8082/getVendorDetailsForType?vendorType=${this.props.selectedVendor}`)
         .then(resp => {   
           this.state.vendorDetails = JSON.stringify(resp.data);
           this.props.fetchVendorDetails(this.state.vendorDetails);
@@ -24,15 +26,21 @@ fetchVendorDetails() {
       }); 
   }
     render(){
+      
         return(
           <div className="container">
             <h3 className="well">Client Page</h3>
             <br/>
             <br/>
             <br/>
-            <div className="col-lg-12 well">
+            <div className="col-lg-20 well">
+            <div className="row">
+                    {this.props.siteDetails.siteDetails.map(clientsite => <ClientSiteDetails key={clientsite.clientname} name = {clientsite.clientname} property= {clientsite.property} />
+                    )}
+                    
+                </div>
                <button type="button"  className="col-sm-2 btn btn-lg btn-info" 
-                    primary onClick={this.fetchVendorDetails}
+                    primary="true" onClick={this.fetchVendorDetails}
                     >Proceed</button> 
               <br/>
               <br/>
@@ -42,7 +50,6 @@ fetchVendorDetails() {
         
         )
     }
-
 
 }
 

@@ -26,13 +26,17 @@ class IFB extends Component {
        ],
        selectedVendor:[],
        vendorDetails:'',
-       selectedClient:''
+       selectedClient:'',
+       bidDueDate:'',
+       workDueDate:'',
+       bidDescription:'',
+       siteDetails:''
     };
     this._next = this._next.bind(this);
     this._back = this._back.bind(this);
     this.getWorkFlowStatus = this.getWorkFlowStatus.bind(this);
     this.statestatus = new StateStatus();
-    this.fetchVendorType = this.fetchVendorType.bind(this); 
+    this.fetchBidDetails = this.fetchBidDetails.bind(this); 
     this.fetchVendorDetails = this.fetchVendorDetails.bind(this); 
    
   }
@@ -41,11 +45,12 @@ class IFB extends Component {
     let currentState = this.state.currentState; 
     let nextState = this.statestatus.transitionTo(currentState, desiredState);
     this.state.currentState = nextState;
+    this.state.myArray = this.getWorkFlowStatus();
     this.setState({
-      currentState: nextState,
-      status: false
+      currentState: nextState
     });
-     this.state.myArray = this.getWorkFlowStatus();
+     
+   //  this.state.siteDetails='{ 	"siteDetails": [{ 		"clientName": "Rekha", 		"sites": [{ 			"propertyId" : 1, 			"name" : "street1", 			"circle" : "c1", 			"streetNumber": "1" 		}, { 			"propertyId" : 2, 			"name" : "street2", 			"circle" : "c2", 			"streetNumber": "Street2" 		}] 	}, { 		"clientName": "Latha", 		"sites": [{ 			"propertyId" : 1, 			"name" : "street2", 			"circle" : "c2", 			"streetNumber": "3" 		}] 	}] }';
     }
 
   _back(desiredState) {
@@ -92,12 +97,16 @@ class IFB extends Component {
   _currentStep() {
     switch(this.state.currentState) {
       case states.INVIATATION_FOR_BID:
-        return(<div><HeaderGroup headers={this.state.myArray}/><Invitationforbid next={this._next} fetchVendorType={this.fetchVendorType} /></div>);
+        return(<div><HeaderGroup headers={this.state.myArray}/><Invitationforbid next={this._next} fetchBidDetails={this.fetchBidDetails} /></div>);
       case states.REVIEW_CLIENTS:
-        return(<div><HeaderGroup headers={this.state.myArray}/><ReviewClients next={this._next} back={this._back} fetchVendorDetails={this.fetchVendorDetails} selectedVendor={this.state.selectedVendor} selectedClient={this.state.selectedClient}/></div>);
+        return(<div><HeaderGroup headers={this.state.myArray}/><ReviewClients next={this._next} back={this._back} fetchVendorDetails={this.fetchVendorDetails} 
+        selectedVendor={this.state.selectedVendor} selectedClient={this.state.selectedClient}
+        siteDetails={JSON.parse(this.state.siteDetails)}/></div>);
       case states.REVIEW_VENDORS:
         return(<div><HeaderGroup headers={this.state.myArray}/><ReviewVendors vendortypes={JSON.parse(this.state.vendorDetails)}
-          selectedClient={this.state.selectedClient} back={this._back}
+          selectedClient={this.state.selectedClient} 
+          bidDueDate={this.state.bidDueDate} workDueDate={this.state.workDueDate} bidDescription={this.state.bidDescription}
+          back={this._back}
           next={this._next}/></div>);
       case states.CONFIRM:
         return(<div><HeaderGroup headers={this.state.myArray}/><Confirm selectedClient={this.state.selectedClient}
@@ -105,18 +114,27 @@ class IFB extends Component {
     }
   } 
    
-   fetchVendorType (vendorType,client){   
-     console.log('fetchVendorType in IFB vendorType'+ vendorType+ 'client'+ client) 
+   fetchBidDetails (vendorType,client,bidDueDate,workDueDate,description,clientSite){   
+     console.log('fetchBidDetails in IFB vendorType'+ vendorType+ 'client'+ client ) 
+     console.log(' client site in IFB ' + clientSite);
     this.setState({ selectedVendor: [...this.state.selectedVendor, vendorType]  }); 
     this.setState({ selectedClient: client  }); 
+    this.setState({ bidDueDate: bidDueDate  }); 
+    this.setState({ workDueDate: workDueDate });
+    this.setState({ bidDescription: description});
+    this.setState({ siteDetails: clientSite })
   }
 
    fetchVendorDetails (vendorDetailsFrmDb){    
     this.setState({ vendorDetails: vendorDetailsFrmDb  }); 
   }
 
+  fetchClientSiteDetails(clientDetailsFromDb){
+      this.setState({ siteDetails: clientDetailsFromDb });
+  }
+
   render() {
-    return (
+     return (
       <div>
         {this._currentStep()}
       </div>

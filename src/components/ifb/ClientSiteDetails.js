@@ -1,22 +1,20 @@
-/*global google*/
 import React, { Component } from 'react';
-import NotificationAlert from 'react-notification-alert';
-import {Grid} from 'semantic-ui-react';
-import Vendor from './Vendor';
+import SiteDetails from './SiteDetails';
 import { Card, CardImg, CardText, CardBody,
     CardTitle, CardSubtitle, Button } from 'reactstrap';
 import {FormGroup, Label } from 'reactstrap';
 
 
-class VendorType extends Component {
+class ClientSiteDetails extends Component {
   render() {
+      
       return (
         <div className="col-sm-4 form-group">
             <Card className="text-left">
                 <CardBody>
                     <FormGroup>
                         <Label for="exampleCheckbox">{this.props.name}</Label>
-                        {this.props.vendors.map(vendor => <Vendor key={vendor.vendortypeId} {...vendor} />)}
+                        {this.props.property.map(client => <SiteDetails key={client.propertyID} {...client} />)}
                     </FormGroup>
                 </CardBody>
             </Card>
@@ -25,4 +23,4 @@ class VendorType extends Component {
   }
 } 
 
-export default VendorType;
+export default ClientSiteDetails;
