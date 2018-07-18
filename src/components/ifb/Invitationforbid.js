@@ -6,7 +6,9 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import DropzoneComponent from 'react-dropzone-component';
 import './style.css';
 import { states } from './States';
-import uuidv1 from 'uuid/v1'
+import uuidv1 from 'uuid/v1';
+
+import ReviewClients from './ReviewClients';
 
 
 var djsConfig = {autoProcessQueue: false ,addRemoveLinks: true}
@@ -125,11 +127,19 @@ class Invitationforbid extends Component {
       bid.client = {};
       bid.client.name = selectedcleint;
       bid.client.sites = [];
+      
+      axios.get(`http://localhost:8082/getClientSites?clientName=${selectedcleint}`)
+        .then(resp => { 
+          this.state.siteDetails = JSON.stringify(resp.data);
+          this.state.siteDetails = JSON.parse(this.state.siteDetails);
+          this.toggle();
+      }); 
+      
       this.setState({
           selectedClient: selectedcleint,
           bidData: bid
       });
-      this.toggle();
+      
   }; 
 
   fetchDate (date,id){   
@@ -220,13 +230,13 @@ class Invitationforbid extends Component {
         </div>
 
         <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
-          <ModalHeader toggle={this.toggle}>Modal title</ModalHeader>
+          <ModalHeader toggle={this.toggle}>Client Site Selection</ModalHeader>
           <ModalBody>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                   <ReviewClients siteDetails={this.state.siteDetails}/>
           </ModalBody>
           <ModalFooter>
             <Button color="primary" onClick={this.toggle}>Do Something</Button>{' '}
-            <Button color="secondary" onClick={this.toggle}>Cancel</Button>
+            
           </ModalFooter>
         </Modal>
 
