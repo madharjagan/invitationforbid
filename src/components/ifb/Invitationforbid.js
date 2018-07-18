@@ -6,6 +6,7 @@ import DropzoneComponent from 'react-dropzone-component';
 import './style.css';
 import { states } from './States';
 import { Dropdown } from 'semantic-ui-react'
+import uuidv1 from 'uuid/v1'
 
 
 var djsConfig = {autoProcessQueue: false ,addRemoveLinks: true}
@@ -20,32 +21,37 @@ var componentConfig = { postUrl: 'no-url' ,processQueue:'false'};
 var axios = require('axios');
 
 var vendorTypes =[];
+
 class Invitationforbid extends Component {
  
   constructor(props) {
     super(props);
     this.state = {
+      bidData: {},
       clientNames : [],
       selectedVendor:[],
       selectedClient:'',
       bidDueDate:'',
       workDueDate:'',
-      description:'',
+      bidDescription:'',
       siteDetails:''
     };
+    this.state.bidData.vendors=[];
     this.handleChange = this.handleChange.bind(this);
     this.handleChangeClient = this.handleChangeClient.bind(this);
+    this.handleChangeVendor = this.handleChangeVendor.bind(this);
     this.fetchBidDetails = this.fetchBidDetails.bind(this);
     this.fetchDate = this.fetchDate.bind(this);
+    this.createBid = this.createBid.bind(this);
 
-    axios.get(`http://localhost:8082/getClientNames`)
+    axios.get(`http://ec2-18-207-186-141.compute-1.amazonaws.com:8082/getClientNames`)
         .then(resp => {   
           this.setState(prevState => ({
             clientNames: resp.data 
         }))
       }); 
       
-       axios.get(`http://localhost:8082/getVendorTypes`)
+       axios.get(`http://ec2-18-207-186-141.compute-1.amazonaws.com:8082/getVendorTypes`)
         .then(resp => {   
           vendorTypes = resp.data;
          // console.log('vendorTypes' + vendorTypes)
@@ -56,10 +62,28 @@ class Invitationforbid extends Component {
     
   }
 
+  createBid(props){
+    let bid = this.state.bidData;    //creating copy of object
+    bid.bidid = uuidv1();
+    //bidData.client.sites.push( this.state.selectedClientSites);
+    this.setState({bidData:bid});
+    
+    console.log('bidData in confirm' + JSON.stringify(this.state.bidData))
+   //this.props.next(states.CONFIRM);
+    fetch('http://localhost:3000/ifb/addbid/', {
+        method: 'POST',
+        headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(this.state.bidData),
+    });
+
+}
   fetchBidDetails() {
     //console.log('fetchBidDetails in inviation '+this.state.selectedVendor + 'client' + this.state.selectedClient);
     
-    axios.get(`http://localhost:8082/getClientSites?clientName=${this.state.selectedClient}`)
+    axios.get(`http://ec2-18-207-186-141.compute-1.amazonaws.com:8082/getClientSites?clientName=${this.state.selectedClient}`)
         .then(resp => {   
           this.state.siteDetails = JSON.stringify(resp.data);
           this.props.fetchBidDetails(this.state.selectedVendor,this.state.selectedClient,this.state.bidDueDate,this.state.workDueDate,this.state.description,this.state.siteDetails);
@@ -75,27 +99,51 @@ class Invitationforbid extends Component {
     });
   };
 
+  handleChangeVendor = (e) => {
+    e.persist();
+    let bid = this.state.bidData;
+    let selectedVendor ={};
+    selectedVendor.type = e.target.textContent;
+    bid.vendors.push(selectedVendor);
+    this.setState({
+      bidData: bid
+    });
+
+  };
+
   
   handleChangeClient = (e) => {
-        e.persist();
-        this.setState({
-            selectedClient: e.target.value
-            });
-    }; 
+      let bid = this.state.bidData;
+      let selectedcleint = e.target.value;
+      bid.client = {};
+      bid.client.name = selectedcleint;
+      bid.client.sites = [];
+      this.setState({
+          selectedClient: selectedcleint,
+          bidData: bid
+      });
+  }; 
 
   fetchDate (date,id){   
-   
+     let bid = this.state.bidData;
      if( id === "bidDueDateId"){
-        this.setState({ bidDueDate: date  }); 
+        bid.bidduedate = date;
+        this.setState({ bidDueDate: date, bidData:bid }); 
      }
      if( id === "workDueDateId"){
-        this.setState({ workDueDate: date  }); 
+      bid.workduedate = date
+      this.setState({ workDueDate: date, bidData:bid }); 
      } 
+
   }
 
   fetchDescription = (e) => {
-  this.setState({
-      description: e.target.value
+    let bid = this.state.bidData;
+    let desc = e.target.value;
+    bid.description = desc;
+    this.setState({
+      bidDescription: desc,
+      bidData:bid
     });
   };
 
@@ -111,7 +159,7 @@ class Invitationforbid extends Component {
         <h1 className="well">{this.screentitle}</h1>
         <div className="col-lg-12 well">
           <div className="row">
-            <Form id="inviationforbidform" onSubmit={this.fetchBidDetails}>
+            <Form id="inviationforbidform" onSubmit={this.createBid}>
               <div className="row">		
                   <div className=" col-sm-6 form-group">
                     <label>Select Client</label>
@@ -133,7 +181,7 @@ class Invitationforbid extends Component {
                 </div>
                 <div className="col-sm-11 form-group">
                   <label>Description*</label>
-                  <TextArea autoHeight placeholder='Enter Description' value={this.props.description}
+                  <TextArea autoHeight placeholder='Enter Description' value={this.state.bidDescription}
                   onChange={(e) => this.fetchDescription(e)}/>
                 </div>
                 <div className="col-lg-12 well">	
@@ -144,7 +192,7 @@ class Invitationforbid extends Component {
                                 placeholder="Select Vendors"
                                 fluid multiple selection
                                 options={vendorTypes}
-                                onChange={(e) => this.handleChange(e,vendorTypes)}
+                                onChange={(e) => this.handleChangeVendor(e)}
                               />   
                       </div>  
                   </div>

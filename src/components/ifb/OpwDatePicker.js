@@ -13,7 +13,7 @@ export default class OpwDatePicker extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      startDate: moment()
+      selectedDate: moment()
     };
     this.handleChange = this.handleChange.bind(this);
   }
@@ -21,23 +21,21 @@ export default class OpwDatePicker extends React.Component {
   handleChange(date) {
    
     //added for assigning new selected value to startDate variable to pass to invitationForBid screen
-    this.state.startDate= date
-    this.setState({
-      startDate: date
-    },
-    this.props.fetchDate(this.state.startDate,this.props.id));
     
+    console.log(this.props.id + date);
+    this.setState({
+      selectedDate: date
+    });
+    this.props.fetchDate(this.state.selectedDate,this.props.id);    
   }
 
   render() {
     return (   
-              <Form id="inviationforbidform" onSubmit={this.fetchDate}>
                 <DatePicker
                 dateFormat="YYYY/MM/DD"
-                selected={this.state.startDate}
+                selected={this.state.selectedDate}
                 onChange={this.handleChange}
                 />
-          </Form>
       );
   }
 }

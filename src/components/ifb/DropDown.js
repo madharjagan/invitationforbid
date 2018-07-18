@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Dropdown } from 'semantic-ui-react'
 
-const options = [
+/*const options = [
   { key: '1', text: 'Air Duct Cleaning', value: 'air duct cleaning' },
   { key: '2', text: 'Alarms', value: 'Alarms' },
   { key: '3', text: 'Appliance Repair - Large', value: 'Appliance Repair - Large' },
@@ -17,12 +17,18 @@ const options = [
   { key: '13', text: 'Driveways - Asphalt', value: 'Driveways - Asphalt' },
   { key: '14', text: 'Driveways - Concrete', value: 'Driveways - Concrete' },
   { key: '15', text: 'Dryer Vent Cleaning', value: 'Dryer Vent Cleaning' }
-]
+]*/
+
+handleChange = (e) => {
+  e.persist();
+  console.log("DropdownExampleMultipleSelection");
+  console.log(e.target.value);
+  };
 
 class DropdownExampleMultipleSelection extends Component {
   render(){
       return (
-      <Dropdown placeholder='Vendors' fluid multiple selection options={options} />
+      <Dropdown placeholder='Vendors' fluid multiple selection options={options}  onChange={this.onChange}/>
     );
   }
 }

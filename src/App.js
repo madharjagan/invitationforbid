@@ -21,13 +21,6 @@ class App extends Component {
         <br />
         <br />
         <IFB /> 
-        <br />
-        <br />
-        <IFBStatus />
-        <br />
-        <br />
-        <h1>IFB Response WorkFlow</h1>
-        <IFBResponse />
       </div>
     );
   }
