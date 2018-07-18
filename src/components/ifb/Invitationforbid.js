@@ -8,7 +8,10 @@ import './style.css';
 import { states } from './States';
 import uuidv1 from 'uuid/v1';
 
-import ReviewClients from './ReviewClients';
+import ClientSitesModal from './ClientSitesModal';
+import VendorsOfaTypeModal from './VendorsOfaTypeModal';
+
+
 
 
 var djsConfig = {autoProcessQueue: false ,addRemoveLinks: true}
@@ -36,16 +39,17 @@ class Invitationforbid extends Component {
       workDueDate:'',
       bidDescription:'',
       siteDetails:'',
-      modal: false
+      clientModal: false,
+      vendorModal: false
     };
     this.state.bidData.vendors=[];
-    this.handleChange = this.handleChange.bind(this);
     this.handleChangeClient = this.handleChangeClient.bind(this);
     this.handleChangeVendor = this.handleChangeVendor.bind(this);
     this.fetchBidDetails = this.fetchBidDetails.bind(this);
     this.fetchDate = this.fetchDate.bind(this);
     this.createBid = this.createBid.bind(this);
-    this.toggle = this.toggle.bind(this);
+    this.toggleClientModal = this.toggleClientModal.bind(this);
+    this.toggleVendorModal = this.toggleVendorModal.bind(this);
 
     axios.get(`http://ec2-18-207-186-141.compute-1.amazonaws.com:8082/getClientNames`)
         .then(resp => {   
@@ -65,9 +69,15 @@ class Invitationforbid extends Component {
     
   }
 
-  toggle() {
+  toggleClientModal() {
     this.setState({
-      modal: !this.state.modal
+      clientModal: !this.state.clientModal
+    });
+  }
+
+  toggleVendorModal() {
+    this.setState({
+      vendorModal: !this.state.vendorModal
     });
   }
 
@@ -101,23 +111,23 @@ class Invitationforbid extends Component {
     
   }
 
-  handleChange = (e, {value}) => {
-  e.persist();
-  this.setState({
-      selectedVendor: [...this.state.selectedVendor, e.target.textContent] 
-    });
-  };
 
   handleChangeVendor = (e) => {
     e.persist();
     let bid = this.state.bidData;
-    let selectedVendor ={};
-    selectedVendor.type = e.target.textContent;
-    bid.vendors.push(selectedVendor);
+    let selectedVendors ={};
+    selectedVendors.type = e.target.textContent;
+    axios.get(`http://ec2-18-207-186-141.compute-1.amazonaws.com:8082/getVendorDetailsForType?vendorType=${e.target.textContent}`)
+    .then(resp => {   
+      this.state.vendorDetails = JSON.stringify(resp.data);
+      this.state.vendorDetails = JSON.parse(this.state.vendorDetails);
+      console.log(this.state.vendorDetails);
+      this.toggleVendorModal();
+    }); 
+    bid.vendors.push(selectedVendors);
     this.setState({
       bidData: bid
     });
-
   };
 
   
@@ -128,11 +138,11 @@ class Invitationforbid extends Component {
       bid.client.name = selectedcleint;
       bid.client.sites = [];
       
-      axios.get(`http://localhost:8082/getClientSites?clientName=${selectedcleint}`)
+      axios.get(`http://ec2-18-207-186-141.compute-1.amazonaws.com:8082/getClientSites?clientName=${selectedcleint}`)
         .then(resp => { 
           this.state.siteDetails = JSON.stringify(resp.data);
           this.state.siteDetails = JSON.parse(this.state.siteDetails);
-          this.toggle();
+          this.toggleClientModal();
       }); 
       
       this.setState({
@@ -224,26 +234,17 @@ class Invitationforbid extends Component {
                   </div>									
               </div>
               <br/>
-               <button type="submit"  className="col-sm-2 btn btn-lg btn-info">Proceed</button>
+               <button type="submit"  className="col-sm-2 btn btn-lg btn-info">Create Bid</button>
            </Form> 
           </div>
         </div>
-
-        <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
-          <ModalHeader toggle={this.toggle}>Client Site Selection</ModalHeader>
-          <ModalBody>
-                   <ReviewClients siteDetails={this.state.siteDetails}/>
-          </ModalBody>
-          <ModalFooter>
-            <Button color="primary" onClick={this.toggle}>Do Something</Button>{' '}
-            
-          </ModalFooter>
-        </Modal>
-
+        <ClientSitesModal modal = {this.state.clientModal} toggle={this.toggleClientModal} className={this.props.className} siteDetails={this.state.siteDetails}/>
+        <VendorsOfaTypeModal modal = {this.state.vendorModal} toggle={this.toggleVendorModal} className={this.props.className} vendorDetails = {this.state.vendorDetails}/>
       </div>
     );
   };
 
 }
+
 
 export default Invitationforbid;
