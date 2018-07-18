@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import DatePicker from './OpwDatePicker';
-import { Form, TextArea } from 'semantic-ui-react'
+import { Form, TextArea, Dropdown } from 'semantic-ui-react'
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 //import Dropzone from 'react-dropzone'
 import DropzoneComponent from 'react-dropzone-component';
 import './style.css';
 import { states } from './States';
-import { Dropdown } from 'semantic-ui-react'
 import uuidv1 from 'uuid/v1'
 
 
@@ -23,7 +23,6 @@ var axios = require('axios');
 var vendorTypes =[];
 
 class Invitationforbid extends Component {
- 
   constructor(props) {
     super(props);
     this.state = {
@@ -34,7 +33,8 @@ class Invitationforbid extends Component {
       bidDueDate:'',
       workDueDate:'',
       bidDescription:'',
-      siteDetails:''
+      siteDetails:'',
+      modal: false
     };
     this.state.bidData.vendors=[];
     this.handleChange = this.handleChange.bind(this);
@@ -43,6 +43,7 @@ class Invitationforbid extends Component {
     this.fetchBidDetails = this.fetchBidDetails.bind(this);
     this.fetchDate = this.fetchDate.bind(this);
     this.createBid = this.createBid.bind(this);
+    this.toggle = this.toggle.bind(this);
 
     axios.get(`http://ec2-18-207-186-141.compute-1.amazonaws.com:8082/getClientNames`)
         .then(resp => {   
@@ -60,6 +61,12 @@ class Invitationforbid extends Component {
         }))
       }); 
     
+  }
+
+  toggle() {
+    this.setState({
+      modal: !this.state.modal
+    });
   }
 
   createBid(props){
@@ -122,6 +129,7 @@ class Invitationforbid extends Component {
           selectedClient: selectedcleint,
           bidData: bid
       });
+      this.toggle();
   }; 
 
   fetchDate (date,id){   
@@ -148,10 +156,9 @@ class Invitationforbid extends Component {
   };
 
 
-
  render()
   {
-     var clientNames = this.state.clientNames.map((client) =>
+    var clientNames = this.state.clientNames.map((client) =>
                 <option key={client}>{client}</option>
             );
     return (
@@ -211,6 +218,18 @@ class Invitationforbid extends Component {
            </Form> 
           </div>
         </div>
+
+        <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
+          <ModalHeader toggle={this.toggle}>Modal title</ModalHeader>
+          <ModalBody>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          </ModalBody>
+          <ModalFooter>
+            <Button color="primary" onClick={this.toggle}>Do Something</Button>{' '}
+            <Button color="secondary" onClick={this.toggle}>Cancel</Button>
+          </ModalFooter>
+        </Modal>
+
       </div>
     );
   };
