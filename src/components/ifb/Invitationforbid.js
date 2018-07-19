@@ -35,6 +35,7 @@ class Invitationforbid extends Component {
       clientNames : [],
       selectedVendor:[],
       selectedClient:'',
+      selectedClientSite: new Set(),
       bidDueDate:'',
       workDueDate:'',
       bidDescription:'',
@@ -50,6 +51,8 @@ class Invitationforbid extends Component {
     this.createBid = this.createBid.bind(this);
     this.toggleClientModal = this.toggleClientModal.bind(this);
     this.toggleVendorModal = this.toggleVendorModal.bind(this);
+    this.updateBidDataClientDetails = this.updateBidDataClientDetails.bind(this);
+    this.updateClientSite = this.updateClientSite.bind(this);
 
     axios.get(`http://ec2-18-207-186-141.compute-1.amazonaws.com:8082/getClientNames`)
         .then(resp => {   
@@ -133,12 +136,12 @@ class Invitationforbid extends Component {
   
   handleChangeClient = (e) => {
       let bid = this.state.bidData;
-      let selectedcleint = e.target.value;
+      let selectedclient = e.target.value;
       bid.client = {};
-      bid.client.name = selectedcleint;
+      bid.client.name = selectedclient;
       bid.client.sites = [];
       
-      axios.get(`http://ec2-18-207-186-141.compute-1.amazonaws.com:8082/getClientSites?clientName=${selectedcleint}`)
+      axios.get(`http://ec2-18-207-186-141.compute-1.amazonaws.com:8082/getClientSites?clientName=${selectedclient}`)
         .then(resp => { 
           this.state.siteDetails = JSON.stringify(resp.data);
           this.state.siteDetails = JSON.parse(this.state.siteDetails);
@@ -146,11 +149,29 @@ class Invitationforbid extends Component {
       }); 
       
       this.setState({
-          selectedClient: selectedcleint,
+          selectedClient: selectedclient,
           bidData: bid
       });
       
   }; 
+
+  
+  updateBidDataClientDetails(){
+    console.log("updateBidDataClientDetails Working");
+    let bid = this.state.bidData;
+    bid.client.sites = [];
+    this.state.selectedClientSite.forEach(v => bid.client.sites.push(v));
+    this.setState({
+      bidData: bid
+    });
+    console.log(this.state.bidData);
+    this.toggleClientModal();
+  }
+
+  updateClientSite(scs){
+    console.log("updateClientSite Working" + scs);
+    this.setState({selectedClientSite:scs});
+  }
 
   fetchDate (date,id){   
      let bid = this.state.bidData;
@@ -238,7 +259,7 @@ class Invitationforbid extends Component {
            </Form> 
           </div>
         </div>
-        <ClientSitesModal modal = {this.state.clientModal} toggle={this.toggleClientModal} className={this.props.className} siteDetails={this.state.siteDetails}/>
+        <ClientSitesModal modal = {this.state.clientModal} toggle={this.toggleClientModal} className={this.props.className} siteDetails={this.state.siteDetails} updateBidDataClientDetails={this.updateBidDataClientDetails} updateClientSite = {this.updateClientSite}/>
         <VendorsOfaTypeModal modal = {this.state.vendorModal} toggle={this.toggleVendorModal} className={this.props.className} vendorDetails = {this.state.vendorDetails}/>
       </div>
     );

@@ -31,7 +31,7 @@ fetchVendorDetails() {
           <div className="container">
             <div className="col-lg-20 well">
                 <div className="row">
-                        {this.props.siteDetails.siteDetails.map(clientsite => <ClientSiteDetails key={clientsite.clientname} name = {clientsite.clientname} property= {clientsite.property} />
+                        {this.props.siteDetails.siteDetails.map(clientsite => <ClientSiteDetails key={clientsite.clientname} name = {clientsite.clientname} property= {clientsite.property} updateClientSite={this.props.updateClientSite}/>
                         )}
                         
                 </div>

@@ -19,10 +19,10 @@ export default class ClientSitesModal extends Component {
         <Modal isOpen={this.props.modal} className={this.props.className}>
           <ModalHeader toggle={this.toggle}>Client Site Selection</ModalHeader>
           <ModalBody>
-                   <ReviewClients siteDetails={this.props.siteDetails}/>
+                   <ReviewClients siteDetails={this.props.siteDetails} updateClientSite={this.props.updateClientSite}/>
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" onClick={this.toggle}>Done</Button>{' '}
+            <Button color="primary" onClick={this.props.updateBidDataClientDetails}>Done</Button>{' '}
           </ModalFooter>
         </Modal>
       </div>

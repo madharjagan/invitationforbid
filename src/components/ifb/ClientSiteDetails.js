@@ -15,6 +15,10 @@ class ClientSiteDetails extends Component {
         this.handleChange = this.handleChange.bind(this);
       }
 
+      componentDidMount() {
+        this.props.updateClientSite(this.state.selectedCheckboxes);
+      }
+
     toggleCheckbox = label => {
         if (this.state.selectedCheckboxes.has(label)) {
             this.state.selectedCheckboxes.delete(label);
@@ -25,6 +29,7 @@ class ClientSiteDetails extends Component {
 
        handleChange(evt) {
         this.toggleCheckbox(parseInt(evt.target.id));
+        this.props.updateClientSite(this.state.selectedCheckboxes);
       }
 
     render() {
