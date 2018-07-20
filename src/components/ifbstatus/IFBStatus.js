@@ -1,11 +1,23 @@
 import React, { Component } from 'react';
 import { Table } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import BootstrapTable from 'react-bootstrap-table-next';
 
-
+import IFBSVendor from './IFBSVendor'
+    
 class IFBStatus extends Component {
+
+  constructor(props){
+    super(props)
+    this.state = {
+       commentsModal: false
+    };
+  }
+
 
 
   render() {
+
       return (
         <div className="container">
         <form>
@@ -20,27 +32,12 @@ class IFBStatus extends Component {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>ABC Vendor Company</td>
-                <td>Pending with Vendor</td>
-                <td>
-                <p>
-                  <button type="button" className="btn btn-default btn-sm" >
-                    <span className="glyphicon glyphicon-pencil"></span> 1000 
-                  </button>
-                </p>
-                </td>
-                <td>
-                  <button type="button" className="btn btn-default btn-sm" >
-                  <a href="#">Comments <span class="badge">4</span></a>
-                  </button>
-                </td>
-              </tr>
+               {this.props.response.Vendors.map(vendor => <IFBSVendor vendor={vendor} />)}
             </tbody>
           </Table>
         </form>
       </div>
-      );
+  );
   }
 } 
 
