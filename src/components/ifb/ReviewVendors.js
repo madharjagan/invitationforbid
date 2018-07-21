@@ -16,7 +16,7 @@ class ReviewVendors extends Component {
             <h3 className="well">Vendor Types</h3>
             <div className="col-lg-12 well">
                 <div className="row">
-                    {this.props.vendortypes.vendortypes.map(vendortype => <VendorType key={vendortype.vendortypeId} name = {vendortype.vendorType} vendors= {vendortype.vendor} />
+                    {this.props.vendortypes.vendortypes.map(vendortype => <VendorType key={vendortype.vendortypeId} name = {vendortype.vendorType} vendors= {vendortype.vendor} updateVendorName={this.props.updateVendorName}/>
                     )}
                     
                 </div>

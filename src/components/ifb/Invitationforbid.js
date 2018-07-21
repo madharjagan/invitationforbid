@@ -34,8 +34,8 @@ class Invitationforbid extends Component {
       bidData: {},
       clientNames : [],
       selectedVendor:[],
-      selectedClient:'',
       selectedClientSite: new Set(),
+      selectVendorNames: new Set(),
       bidDueDate:'',
       workDueDate:'',
       bidDescription:'',
@@ -43,7 +43,7 @@ class Invitationforbid extends Component {
       clientModal: false,
       vendorModal: false
     };
-    this.state.bidData.vendors=[];
+    this.state.bidData.vendors = {};
     this.handleChangeClient = this.handleChangeClient.bind(this);
     this.handleChangeVendor = this.handleChangeVendor.bind(this);
     this.fetchBidDetails = this.fetchBidDetails.bind(this);
@@ -53,6 +53,8 @@ class Invitationforbid extends Component {
     this.toggleVendorModal = this.toggleVendorModal.bind(this);
     this.updateBidDataClientDetails = this.updateBidDataClientDetails.bind(this);
     this.updateClientSite = this.updateClientSite.bind(this);
+    this.updateBidDataVendorDetails = this.updateBidDataVendorDetails.bind(this);
+    this.updateVendorName = this.updateVendorName.bind(this);
 
     axios.get(`http://ec2-18-207-186-141.compute-1.amazonaws.com:8082/getClientNames`)
         .then(resp => {   
@@ -87,11 +89,9 @@ class Invitationforbid extends Component {
   createBid(props){
     let bid = this.state.bidData;    //creating copy of object
     bid.bidid = uuidv1();
-    //bidData.client.sites.push( this.state.selectedClientSites);
     this.setState({bidData:bid});
     
     console.log('bidData in confirm' + JSON.stringify(this.state.bidData))
-   //this.props.next(states.CONFIRM);
     fetch('http://localhost:3000/ifb/addbid/', {
         method: 'POST',
         headers: {
@@ -118,16 +118,18 @@ class Invitationforbid extends Component {
   handleChangeVendor = (e) => {
     e.persist();
     let bid = this.state.bidData;
-    let selectedVendors ={};
-    selectedVendors.type = e.target.textContent;
-    axios.get(`http://ec2-18-207-186-141.compute-1.amazonaws.com:8082/getVendorDetailsForType?vendorType=${e.target.textContent}`)
+     console.log('this.state.bidData   ' + this.state.bidData)
+     //bid.vendors = {};
+     bid.vendors.vendortype = e.target.textContent;
+     bid.vendors.vendorname = [] ;
+    console.log('e.target.textContent' + e.target.textContent)
+    axios.get(`http://localhost:8082/getVendorDetailsForType?vendorType=${e.target.textContent}`)
     .then(resp => {   
       this.state.vendorDetails = JSON.stringify(resp.data);
       this.state.vendorDetails = JSON.parse(this.state.vendorDetails);
       console.log(this.state.vendorDetails);
       this.toggleVendorModal();
     }); 
-    bid.vendors.push(selectedVendors);
     this.setState({
       bidData: bid
     });
@@ -160,7 +162,9 @@ class Invitationforbid extends Component {
     console.log("updateBidDataClientDetails Working");
     let bid = this.state.bidData;
     bid.client.sites = [];
-    this.state.selectedClientSite.forEach(v => bid.client.sites.push(v));
+    this.state.selectedClientSite.forEach(v => bid.client.sites.push(v)
+     );
+   
     this.setState({
       bidData: bid
     });
@@ -171,6 +175,24 @@ class Invitationforbid extends Component {
   updateClientSite(scs){
     console.log("updateClientSite Working" + scs);
     this.setState({selectedClientSite:scs});
+  }
+
+  updateBidDataVendorDetails(){
+      let bid = this.state.bidData;
+      console.log('bid before state' + JSON.stringify(bid))
+      bid.vendors.vendorname = [] ;
+      this.state.selectVendorNames.forEach(v => 
+         bid.vendors.vendorname.push(v)
+      );
+     
+      this.setState({
+           bidData: bid
+      });
+    this.toggleVendorModal();
+  }
+
+  updateVendorName(vendorname){
+    this.setState({selectVendorNames:vendorname});
   }
 
   fetchDate (date,id){   
@@ -260,7 +282,7 @@ class Invitationforbid extends Component {
           </div>
         </div>
         <ClientSitesModal modal = {this.state.clientModal} toggle={this.toggleClientModal} className={this.props.className} siteDetails={this.state.siteDetails} updateBidDataClientDetails={this.updateBidDataClientDetails} updateClientSite = {this.updateClientSite}/>
-        <VendorsOfaTypeModal modal = {this.state.vendorModal} toggle={this.toggleVendorModal} className={this.props.className} vendorDetails = {this.state.vendorDetails}/>
+        <VendorNamesModal modal = {this.state.vendorModal} toggle={this.toggleVendorModal} className={this.props.className} vendorDetails = {this.state.vendorDetails} updateBidDataVendorDetails ={this.updateBidDataVendorDetails} updateVendorName={this.updateVendorName}/>
       </div>
     );
   };

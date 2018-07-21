@@ -28,7 +28,7 @@ class ClientSiteDetails extends Component {
       }
 
        handleChange(evt) {
-        this.toggleCheckbox(parseInt(evt.target.id));
+        this.toggleCheckbox((evt.target.value));
         this.props.updateClientSite(this.state.selectedCheckboxes);
       }
 

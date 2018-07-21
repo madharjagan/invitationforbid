@@ -7,15 +7,12 @@ class SiteDetails extends Component {
   constructor() {
     super();
     this.state = { 
-          checkboxChecked: true 
+          checkboxChecked: false
     };
     
     this.handleChange = this.handleChange.bind(this);
   }
 
-  componentDidMount() {
-    this.props.selectedCheckboxes.add(this.props.propertyID);
-  }
 
    handleChange(evt) {
     this.setState({ checkboxChecked: evt.target.checked});
@@ -25,7 +22,9 @@ class SiteDetails extends Component {
       
       return (
           <div>
-            <CustomInput name = {this.props.name} type="checkbox" id={this.props.propertyID} label={this.props.street_number + ","+ this.props.route + " " + this.props.locality} 
+            <CustomInput name = {this.props.name} type="checkbox" id={this.props.propertyID} 
+            label={this.props.street_number + ","+ this.props.route + " " + this.props.locality} 
+            value={this.props.street_number + ","+ this.props.route + " " + this.props.locality} 
             checked={this.state.checkboxChecked}
             onChange={this.handleChange}/>
           </div>
