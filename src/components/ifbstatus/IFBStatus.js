@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Table } from 'reactstrap';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import BootstrapTable from 'react-bootstrap-table-next';
+
 
 import IFBSVendor from './IFBSVendor'
     
