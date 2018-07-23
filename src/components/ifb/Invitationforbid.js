@@ -7,9 +7,7 @@ import DropzoneComponent from 'react-dropzone-component';
 import './style.css';
 import { states } from './States';
 import uuidv1 from 'uuid/v1';
-
 import ClientSitesModal from './ClientSitesModal';
-import VendorsOfaTypeModal from './VendorsOfaTypeModal';
 import VendorNamesModal from './VendorNamesModal';
 
 
@@ -44,10 +42,9 @@ class Invitationforbid extends Component {
       clientModal: false,
       vendorModal: false
     };
-    this.state.bidData.vendors = {};
+    this.state.bidData.vendors = [];
     this.handleChangeClient = this.handleChangeClient.bind(this);
     this.handleChangeVendor = this.handleChangeVendor.bind(this);
-    this.fetchBidDetails = this.fetchBidDetails.bind(this);
     this.fetchDate = this.fetchDate.bind(this);
     this.createBid = this.createBid.bind(this);
     this.toggleClientModal = this.toggleClientModal.bind(this);
@@ -90,9 +87,13 @@ class Invitationforbid extends Component {
   createBid(props){
     let bid = this.state.bidData;    //creating copy of object
     bid.bidid = uuidv1();
+    delete bid["vendorObj"];
     this.setState({bidData:bid});
     
-    console.log('bidData in confirm' + JSON.stringify(this.state.bidData))
+   // console.log('bidData ' + JSON.stringify(this.state.bidData))
+    this.props.createBid(this.state.bidData);
+    this.props.next(states.CONFIRM);
+    
     fetch('http://localhost:3000/ifb/addbid/', {
         method: 'POST',
         headers: {
@@ -103,32 +104,19 @@ class Invitationforbid extends Component {
     });
 
 }
-  fetchBidDetails() {
-    //console.log('fetchBidDetails in inviation '+this.state.selectedVendor + 'client' + this.state.selectedClient);
-    
-    axios.get(`http://ec2-18-207-186-141.compute-1.amazonaws.com:8082/getClientSites?clientName=${this.state.selectedClient}`)
-        .then(resp => {   
-          this.state.siteDetails = JSON.stringify(resp.data);
-          this.props.fetchBidDetails(this.state.selectedVendor,this.state.selectedClient,this.state.bidDueDate,this.state.workDueDate,this.state.description,this.state.siteDetails);
-          this.props.next(states.REVIEW_CLIENTS);
-      }); 
-    
-  }
-
-
+  
   handleChangeVendor = (e) => {
     e.persist();
     let bid = this.state.bidData;
-     console.log('this.state.bidData   ' + this.state.bidData)
-     //bid.vendors = {};
-     bid.vendors.vendortype = e.target.textContent;
-     bid.vendors.vendorname = [] ;
-    console.log('e.target.textContent' + e.target.textContent)
-    axios.get(`http://ec2-18-207-186-141.compute-1.amazonaws.com:8082/getVendorDetailsForType?vendorType=${e.target.textContent}`)
-    .then(resp => {   
-      this.state.vendorDetails = JSON.stringify(resp.data);
-      this.state.vendorDetails = JSON.parse(this.state.vendorDetails);
-      this.toggleVendorModal();
+     bid.vendorObj = {};
+     bid.vendorObj.vendortype = e.target.textContent;
+     bid.vendorObj.vendorname = [] ;
+     this.state.bidData.vendors.push(bid.vendorObj);
+     axios.get(`http://localhost:8082/getVendorDetailsForType?vendorType=${e.target.textContent}`)
+      .then(resp => {   
+        this.state.vendorDetails = JSON.stringify(resp.data);
+        this.state.vendorDetails = JSON.parse(this.state.vendorDetails);
+        this.toggleVendorModal();
     }); 
     this.setState({
       bidData: bid
@@ -174,18 +162,16 @@ class Invitationforbid extends Component {
   }
 
   updateClientSite(scs){
-    console.log("updateClientSite Working" + scs);
+   
     this.setState({selectedClientSite:scs});
   }
 
   updateBidDataVendorDetails(){
-      let bid = this.state.bidData;
-      console.log('bid before state' + JSON.stringify(bid))
-      bid.vendors.vendorname = [] ;
+      let bid = this.state.bidData;     
+      bid.vendorObj.vendorname = [] ;
       this.state.selectVendorNames.forEach(v => 
-         bid.vendors.vendorname.push(v)
-      );
-     
+         bid.vendorObj.vendorname.push(v)
+      );   
       this.setState({
            bidData: bid
       });

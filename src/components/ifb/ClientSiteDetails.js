@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import SiteDetails from './SiteDetails';
-import { Card, CardImg, CardText, CardBody,
-    CardTitle, CardSubtitle, Button } from 'reactstrap';
+import { Card,  CardBody } from 'reactstrap';
 import {FormGroup, Label } from 'reactstrap';
 
 

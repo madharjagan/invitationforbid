@@ -14,10 +14,11 @@ class App extends Component {
     super(props);
     this.state ={
       bidId : '1',
-      respons: {}
+     response: {},
+
     };
 
-    this.state.respons.Vendors = [];
+    this.state.response.Vendors = [];
 
   }
   
@@ -34,8 +35,8 @@ class App extends Component {
      <div className="App">
         <br />
         <br />
-       <IFBStatus respons={this.state.respons}/>
-        
+      <IFBStatus response={this.state.response}/>
+      <IFB/>        
       </div>      
     );
   }
