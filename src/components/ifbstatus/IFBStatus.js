@@ -4,20 +4,18 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 
 import IFBSVendor from './IFBSVendor'
-    
+
+var axios = require('axios');
 class IFBStatus extends Component {
 
   constructor(props){
-    super(props)
+    super(props);
     this.state = {
        commentsModal: false
     };
   }
 
-
-
   render() {
-
       return (
         <div className="container">
         <form>
@@ -32,12 +30,12 @@ class IFBStatus extends Component {
               </tr>
             </thead>
             <tbody>
-               {this.props.response.Vendors.map(vendor => <IFBSVendor vendor={vendor} />)}
+                {this.props.respons.Vendors.map(vendor => <IFBSVendor vendor={vendor} />)}
             </tbody>
           </Table>
         </form>
       </div>
-  );
+  )
   }
 } 
 

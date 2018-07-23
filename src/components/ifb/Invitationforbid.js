@@ -10,6 +10,7 @@ import uuidv1 from 'uuid/v1';
 
 import ClientSitesModal from './ClientSitesModal';
 import VendorsOfaTypeModal from './VendorsOfaTypeModal';
+import VendorNamesModal from './VendorNamesModal';
 
 
 
@@ -123,16 +124,16 @@ class Invitationforbid extends Component {
      bid.vendors.vendortype = e.target.textContent;
      bid.vendors.vendorname = [] ;
     console.log('e.target.textContent' + e.target.textContent)
-    axios.get(`http://localhost:8082/getVendorDetailsForType?vendorType=${e.target.textContent}`)
+    axios.get(`http://ec2-18-207-186-141.compute-1.amazonaws.com:8082/getVendorDetailsForType?vendorType=${e.target.textContent}`)
     .then(resp => {   
       this.state.vendorDetails = JSON.stringify(resp.data);
       this.state.vendorDetails = JSON.parse(this.state.vendorDetails);
-      console.log(this.state.vendorDetails);
       this.toggleVendorModal();
     }); 
     this.setState({
       bidData: bid
     });
+    console.log(this.state.bidData);
   };
 
   
@@ -189,6 +190,7 @@ class Invitationforbid extends Component {
            bidData: bid
       });
     this.toggleVendorModal();
+    console.log('bid before state' + JSON.stringify(bid))
   }
 
   updateVendorName(vendorname){
