@@ -16,6 +16,7 @@ class IFBStatus extends Component {
   }
 
   render() {
+      console.log("Render**********" + this.props.response.Vendors);
       return (
         <div className="container">
         <form>
@@ -30,7 +31,7 @@ class IFBStatus extends Component {
               </tr>
             </thead>
             <tbody>
-                {this.props.respons.Vendors.map(vendor => <IFBSVendor vendor={vendor} />)}
+                {this.props.response.Vendors.map(vendor => <IFBSVendor vendor={vendor} />)}
             </tbody>
           </Table>
         </form>

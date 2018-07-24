@@ -25,7 +25,7 @@ class App extends Component {
   componentDidMount() {
     axios.get(`http://localhost:3000/ifb/1`)
     .then(resp => {           
-          this.setState({respons: JSON.parse(resp.data)});
+          this.setState({response: JSON.parse(resp.data)});
     }); 
   }
 

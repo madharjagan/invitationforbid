@@ -112,7 +112,7 @@ class Invitationforbid extends Component {
      bid.vendorObj.vendortype = e.target.textContent;
      bid.vendorObj.vendorname = [] ;
      this.state.bidData.vendors.push(bid.vendorObj);
-     axios.get(`http://localhost:8082/getVendorDetailsForType?vendorType=${e.target.textContent}`)
+     axios.get(`http://ec2-18-207-186-141.compute-1.amazonaws.com:8082/getVendorDetailsForType?vendorType=${e.target.textContent}`)
       .then(resp => {   
         this.state.vendorDetails = JSON.stringify(resp.data);
         this.state.vendorDetails = JSON.parse(this.state.vendorDetails);
