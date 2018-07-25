@@ -22,10 +22,11 @@ export default class OpwDatePicker extends React.Component {
    
     //added for assigning new selected value to startDate variable to pass to invitationForBid screen
     
-    console.log(this.props.id + date);
+    this.state.selectedDate= date
     this.setState({
       selectedDate: date
     });
+    
     this.props.fetchDate(this.state.selectedDate,this.props.id);    
   }
 

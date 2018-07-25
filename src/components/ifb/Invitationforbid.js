@@ -35,14 +35,14 @@ class Invitationforbid extends Component {
       selectedVendor:[],
       selectedClientSite: new Set(),
       selectVendorNames: new Set(),
-      bidDueDate:'',
-      workDueDate:'',
+      BidDueDate:'',
+      WorkDueDate:'',
       bidDescription:'',
       siteDetails:'',
       clientModal: false,
       vendorModal: false
     };
-    this.state.bidData.vendors = [];
+    this.state.bidData.Vendors = [];
     this.handleChangeClient = this.handleChangeClient.bind(this);
     this.handleChangeVendor = this.handleChangeVendor.bind(this);
     this.fetchDate = this.fetchDate.bind(this);
@@ -89,7 +89,7 @@ class Invitationforbid extends Component {
     bid.bidid = uuidv1();
     delete bid["vendorObj"];
     this.setState({bidData:bid});
-    
+
    // console.log('bidData ' + JSON.stringify(this.state.bidData))
     this.props.createBid(this.state.bidData);
     this.props.next(states.CONFIRM);
@@ -111,8 +111,8 @@ class Invitationforbid extends Component {
      bid.vendorObj = {};
      bid.vendorObj.vendortype = e.target.textContent;
      bid.vendorObj.vendorname = [] ;
-     this.state.bidData.vendors.push(bid.vendorObj);
-     axios.get(`http://ec2-18-207-186-141.compute-1.amazonaws.com:8082/getVendorDetailsForType?vendorType=${e.target.textContent}`)
+     this.state.bidData.Vendors.push(bid.vendorObj);
+     axios.get(`http://localhost:8082/getVendorDetailsForType?vendorType=${e.target.textContent}`)
       .then(resp => {   
         this.state.vendorDetails = JSON.stringify(resp.data);
         this.state.vendorDetails = JSON.parse(this.state.vendorDetails);
@@ -128,9 +128,9 @@ class Invitationforbid extends Component {
   handleChangeClient = (e) => {
       let bid = this.state.bidData;
       let selectedclient = e.target.value;
-      bid.client = {};
-      bid.client.name = selectedclient;
-      bid.client.sites = [];
+      bid.Client = {};
+      bid.Client.name = selectedclient;
+      bid.Client.sites = [];
       
       axios.get(`http://ec2-18-207-186-141.compute-1.amazonaws.com:8082/getClientSites?clientName=${selectedclient}`)
         .then(resp => { 
@@ -150,8 +150,8 @@ class Invitationforbid extends Component {
   updateBidDataClientDetails(){
     console.log("updateBidDataClientDetails Working");
     let bid = this.state.bidData;
-    bid.client.sites = [];
-    this.state.selectedClientSite.forEach(v => bid.client.sites.push(v)
+    bid.Client.sites = [];
+    this.state.selectedClientSite.forEach(v => bid.Client.sites.push(v)
      );
    
     this.setState({
@@ -186,12 +186,12 @@ class Invitationforbid extends Component {
   fetchDate (date,id){   
      let bid = this.state.bidData;
      if( id === "bidDueDateId"){
-        bid.bidduedate = date;
-        this.setState({ bidDueDate: date, bidData:bid }); 
+        bid.BidDueDate = date;
+        this.setState({ BidDueDate: date, bidData:bid }); 
      }
      if( id === "workDueDateId"){
-      bid.workduedate = date
-      this.setState({ workDueDate: date, bidData:bid }); 
+      bid.WorkDueDate = date
+      this.setState({ WorkDueDate: date, bidData:bid }); 
      } 
 
   }
@@ -199,7 +199,7 @@ class Invitationforbid extends Component {
   fetchDescription = (e) => {
     let bid = this.state.bidData;
     let desc = e.target.value;
-    bid.description = desc;
+    bid.Description = desc;
     this.setState({
       bidDescription: desc,
       bidData:bid
