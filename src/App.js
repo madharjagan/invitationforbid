@@ -23,7 +23,7 @@ class App extends Component {
   }
   
   componentDidMount() {
-    axios.get(`http://localhost:3000/ifb/1`)
+    axios.get(`http://18.207.186.141:3000/ifb/1`)
     .then(resp => {           
           this.setState({response: JSON.parse(resp.data)});
     }); 
